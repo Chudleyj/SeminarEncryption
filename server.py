@@ -21,7 +21,10 @@ class privateKey: #TODO: accept random values for encryption
 def decrypt(key, msg):
     return int(((msg ** key.d)% key.n))
 
-
+def swap(msg, i, j):
+    c = list(msg)
+    c[i], c[j] = c[j], c[i]
+    return ''.join(c)
 
 pubKey = publicKey()
 privKey = privateKey()
@@ -48,6 +51,14 @@ while 1:
 
     decrypted = decrypt(privKey, int(data))
     print("Decrypted message: ", decrypted)
+
+    print("Obfuscating data...")
+    obfuscated = swap(str(decrypted), 0, 1) #TODO: ACCEPT ANY SIZE MESSGAE
+    #TODO: MORE OBFUSCATION MEASURES
+    print obfuscated
+
+    
+
 
 
 
