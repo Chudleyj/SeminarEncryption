@@ -1,4 +1,6 @@
 import socket
+import numpy as np
+import pickle
 
 class publicKey: #TODO: accept random values for encryption
     def __init__(self, p = 53, q = 59, e = 3):
@@ -31,35 +33,43 @@ privKey = privateKey()
 privKey.genPrivKey(pubKey.p, pubKey.q, pubKey.e)
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.bind(('localhost', 37000))
+s.bind(('localhost', 47777))
 s.listen(1)
 conn, addr = s.accept()
 
 while 1:
-    data = conn.recv(1024)
+    data = conn.recv(4096) #Message from client for the public key
     if not data:
         break
     
     print(data)
-
     #Send public key info off to client
     conn.sendall(str(pubKey.n))
     conn.sendall(str(pubKey.e))
 
-    data = conn.recv(1024) #Recieve Encryped message
-    print('Recieved encrypted message: ', data)
+    data2 = conn.recv(4096) #Encrypted data
 
-    decrypted = decrypt(privKey, int(data))
-    print("Decrypted message: ", decrypted)
+    encryptedmsg = pickle.loads(data2) #Convert garbage data into numpy array
+    encryptedmsg = encryptedmsg.tolist()
+
+    print("Recieved message: ", encryptedmsg)
+
+    decryptedmsg=""
+    for i in encryptedmsg:
+        decryptedmsg += chr(decrypt(privKey, i))
+
+    print("Decrypted message: ",decryptedmsg)
 
     print("Obfuscating data...")
-    obfuscated = swap(str(decrypted), 0, 1) #TODO: ACCEPT ANY SIZE MESSGAE
-    #TODO: MORE OBFUSCATION MEASURES
-    print obfuscated
+
+    obfuscatedMessage = decryptedmsg.encode('rot13')
+    print("Obfuscated data: ")
 
     
 
-
-
+#   print("Obfuscating data...")
+# obfuscated = swap(str(message), 0, 1) #TODO: ACCEPT ANY SIZE MESSGAE
+    #TODO: MORE OBFUSCATION MEASURES
+#   print obfuscated
 
 conn.close()
