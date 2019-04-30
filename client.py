@@ -32,8 +32,9 @@ msgarr = np.array([ord(i) for i in message])
 
 encryptedmsg = encrypt(pubKey, msgarr)
 
-print("Encryped message to: ", ' '.join(map(str, encryptedmsg)))
-
+print "Encryped message to: ", ' '.join(map(str, encryptedmsg))
+print "Sending encrypted message to server from client..."
+raw_input("Press Enter to continue...")
 #We used the public key to encrypt our message...now send it back to server
 s.send(pickle.dumps(encryptedmsg))
 
@@ -42,18 +43,4 @@ s.close()
 data = 0 #Don't ask my why but the program hangs if you dont clear this var
 #OR print out repr(data)
 
-int rational::gcd()
-{
-    return (*this).num % (*this).denom != 0 ?  (*this).num % (*this).denom :  0;
-}
 
-void rational::reduce(int gcd)
-{
-    (*this).num = (*this).num / gcd;
-    (*this).denom = (*this).denom / gcd;
-}
-int main()
-{
-    int gcd = rationalOBJ.gcd();
-    rationalOBJ.reduce(gcd);
-}
